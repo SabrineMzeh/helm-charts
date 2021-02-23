@@ -45,7 +45,7 @@ controller:
   # If you disable the non-Jenkins identity store and instead use the Jenkins internal one,
   # you should revert controller.adminUser to your preferred admin user:
   adminUser: "admin"
-  # adminPassword: <defaults to random>
+  adminPassword: amine
   admin:
     existingSecret: ""
     userKey: jenkins-admin-user
@@ -104,7 +104,7 @@ controller:
   targetPort: 8080
   # For minikube, set this to NodePort, elsewhere use LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
-  serviceType: ClusterIP
+  serviceType: NodePort
   # Jenkins controller service annotations
   serviceAnnotations: {}
   # Jenkins controller custom labels
@@ -117,19 +117,19 @@ controller:
   # Put labels on Jenkins controller pod
   podLabels: {}
   # Used to create Ingress record (should used with ServiceType: ClusterIP)
-  # nodePort: <to set explicitly, choose port between 30000-32767
+  nodePort: 32323
   # Enable Kubernetes Liveness and Readiness Probes
   # if Startup Probe is supported, enable it too
   # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
   healthProbes: true
   probes:
-    startupProbe:
-      httpGet:
-        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
-        port: http
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 12
+   # startupProbe:
+     # httpGet:
+      #  path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+     #   port: http
+    #  periodSeconds: 10
+   #  timeoutSeconds: 5
+   #   failureThreshold: 12
     livenessProbe:
       failureThreshold: 5
       httpGet:
@@ -663,10 +663,10 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass:
+  storageClass: nfs-client 
   annotations: {}
   accessMode: "ReadWriteOnce"
-  size: "8Gi"
+  size: "10Gi"
   volumes:
   #  - name: nothing
   #    emptyDir: {}
